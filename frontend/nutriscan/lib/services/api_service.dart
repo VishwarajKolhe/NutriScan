@@ -1,9 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 class ApiService {
-  static Future<void> sendToBackend(XFile imageFile) async {
+  static Future<Map<String, dynamic>> sendToBackend(XFile imageFile) async {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse('http://localhost:8000/analyze'),
@@ -26,7 +27,8 @@ class ApiService {
     }
 
     var response = await request.send();
+    var body = await response.stream.bytesToString();
 
-    print("Response: ${response.statusCode}");
+    return jsonDecode(body);
   }
 }

@@ -1,5 +1,6 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from routes.analyze import router
 
 app = FastAPI()
 
@@ -11,11 +12,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/analyze")
-async def analyze(file: UploadFile = File(...)):
-    content = await file.read()
-    
-    return {
-        "message": "Image received successfully",
-        "filename": file.filename
-    }
+app.include_router(router)
+
+@app.get("/")
+def home():
+    return {"status": "running"}

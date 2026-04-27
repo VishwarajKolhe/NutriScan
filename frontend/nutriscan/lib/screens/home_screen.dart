@@ -5,6 +5,7 @@ import 'dart:io';
 
 import '../widgets/image_card.dart';
 import '../services/api_service.dart';
+import 'result_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -22,46 +23,67 @@ class _HomeScreenState extends State<HomeScreen> {
     if (picked != null) {
       setState(() {
         _image = picked;
-        if (!kIsWeb) {
-          _mobileImage = File(picked.path);
-        }
+        if (!kIsWeb) _mobileImage = File(picked.path);
+        isLoading = true;
       });
 
-      setState(() => isLoading = true);
+      try {
+        final res = await ApiService.sendToBackend(picked);
 
-      await ApiService.sendToBackend(picked);
-
-      setState(() => isLoading = false);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultScreen(result: res),
+          ),
+        );
+      } catch (e) {
+        print("Error: $e");
+      } finally {
+        setState(() => isLoading = false);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[600],
+      backgroundColor: Color(0xFFF5F7F6),
+
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.eco, color: Color(0xFF2E7D32)),
-            SizedBox(width: 8),
-            Text("NutriScan"),
+            SizedBox(width: 6),
+            Text(
+              "NutriScan",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
       ),
+
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            constraints: BoxConstraints(maxWidth: 400),
+            constraints: BoxConstraints(maxWidth: 420),
             padding: EdgeInsets.all(16),
+
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // 🔹 TITLE
                 Text(
                   "Scan Your Food",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
                   ),
                 ),
 
@@ -70,8 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   "Understand what you eat. Make healthier choices.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  style: TextStyle(color: Colors.grey[600]),
                 ),
+
                 SizedBox(height: 20),
 
                 ImageCard(image: _image, mobileImage: _mobileImage),
@@ -79,7 +102,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 20),
 
                 isLoading
-                    ? CircularProgressIndicator()
+                    ? Column(
+                        children: [
+                          CircularProgressIndicator(
+                            color: Color(0xFF2E7D32),
+                          ),
+                          SizedBox(height: 10),
+                          Text("Analyzing..."),
+                        ],
+                      )
                     : SizedBox(
                         width: double.infinity,
                         height: 52,
