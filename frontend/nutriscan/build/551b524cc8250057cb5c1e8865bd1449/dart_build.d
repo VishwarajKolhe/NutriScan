@@ -1,0 +1,1 @@
+ C:\\Users\\datta\\NutriScan\\frontend\\nutriscan\\build\\551b524cc8250057cb5c1e8865bd1449\\dart_build_result.json: 

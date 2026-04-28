@@ -1,0 +1,28 @@
+^C:\USERS\DATTA\NUTRISCAN\FRONTEND\NUTRISCAN\BUILD\WINDOWS\X64\CMAKEFILES\758C2787701A80B02055620E6071D655\FLUTTER_WINDOWS.DLL.RULE
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E env FLUTTER_ROOT=C:\flutter PROJECT_DIR=C:\Users\datta\NutriScan\frontend\nutriscan FLUTTER_ROOT=C:\flutter FLUTTER_EPHEMERAL_DIR=C:\Users\datta\NutriScan\frontend\nutriscan\windows\flutter\ephemeral PROJECT_DIR=C:\Users\datta\NutriScan\frontend\nutriscan FLUTTER_TARGET=C:\Users\datta\NutriScan\frontend\nutriscan\lib\main.dart DART_DEFINES=RkxVVFRFUl9WRVJTSU9OPTMuNDEuNw==,RkxVVFRFUl9DSEFOTkVMPXN0YWJsZQ==,RkxVVFRFUl9HSVRfVVJMPWh0dHBzOi8vZ2l0aHViLmNvbS9mbHV0dGVyL2ZsdXR0ZXIuZ2l0,RkxVVFRFUl9GUkFNRVdPUktfUkVWSVNJT049Y2MwNzM0YWM3MQ==,RkxVVFRFUl9FTkdJTkVfUkVWSVNJT049NTlhYTU4NGZkZg==,RkxVVFRFUl9EQVJUX1ZFUlNJT049My4xMS41 DART_OBFUSCATION=false TRACK_WIDGET_CREATION=true TREE_SHAKE_ICONS=false PACKAGE_CONFIG=C:\Users\datta\NutriScan\frontend\nutriscan\.dart_tool\package_config.json C:/flutter/packages/flutter_tools/bin/tool_backend.bat windows-x64 Debug
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\DATTA\NUTRISCAN\FRONTEND\NUTRISCAN\BUILD\WINDOWS\X64\CMAKEFILES\19CA6CD8D9E7C6050875B074DCDD7111\FLUTTER_ASSEMBLE.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\DATTA\NUTRISCAN\FRONTEND\NUTRISCAN\WINDOWS\FLUTTER\CMAKELISTS.TXT
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/datta/NutriScan/frontend/nutriscan/windows -BC:/Users/datta/NutriScan/frontend/nutriscan/build/windows/x64 --check-stamp-file C:/Users/datta/NutriScan/frontend/nutriscan/build/windows/x64/flutter/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

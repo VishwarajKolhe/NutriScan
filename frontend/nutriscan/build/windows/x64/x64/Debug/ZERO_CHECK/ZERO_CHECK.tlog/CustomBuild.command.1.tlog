@@ -1,0 +1,10 @@
+^C:\USERS\DATTA\NUTRISCAN\FRONTEND\NUTRISCAN\BUILD\WINDOWS\X64\CMAKEFILES\8C2A2D9D5D999E24D3390A82DB0C85CD\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/datta/NutriScan/frontend/nutriscan/windows -BC:/Users/datta/NutriScan/frontend/nutriscan/build/windows/x64 --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/datta/NutriScan/frontend/nutriscan/build/windows/x64/nutriscan.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

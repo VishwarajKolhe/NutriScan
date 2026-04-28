@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\datta\NutriScan\frontend\nutriscan\build\windows\x64\CMakeFiles\758c2787701a80b02055620e6071d655\flutter_windows.dll.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\datta\NutriScan\frontend\nutriscan\build\windows\x64\CMakeFiles\19ca6cd8d9e7c6050875b074dcdd7111\flutter_assemble.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\datta\NutriScan\frontend\nutriscan\windows\flutter\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\datta\NutriScan\frontend\nutriscan\build\windows\x64\flutter\CMakeFiles\flutter_assemble" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{E5ADB386-E72C-3C2F-8E4B-D792600545D4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

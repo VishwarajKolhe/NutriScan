@@ -1,0 +1,10 @@
+^C:\USERS\DATTA\NUTRISCAN\FRONTEND\NUTRISCAN\BUILD\WINDOWS\X64\CMAKEFILES\8C2A2D9D5D999E24D3390A82DB0C85CD\INSTALL_FORCE.RULE
+setlocal
+cd .
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
