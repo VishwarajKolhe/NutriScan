@@ -45,8 +45,11 @@ app.*.map.json
 /android/app/release
 
 __pycache__/
+**/__pycache__/
 *.pyc
 
 .env
+
+frontend/nutriscan/build/
 
 venv/.claude

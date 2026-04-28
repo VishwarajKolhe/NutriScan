@@ -1,44 +1,19 @@
-# NutriScan AI 
+# NutriScan
 
-> AI-powered food ingredient analyser — Google Solution Challenge 2026
+AI-powered food label analyzer. Upload a photo of any packaged food product and instantly get a health score, ingredient breakdown, marketing claim fact-checks, and healthier alternatives — powered by Google Gemini 2.5 Flash.
 
-NutriScan AI lets you photograph any packaged food label and instantly receive a science-backed breakdown of every ingredient — safety ratings, allergen flags, a health score out of 10, and healthier product alternatives. No database look-ups. No barcode required. Just point, shoot, and know what you're eating.
-
----
-
-## Demo
-
-📹 [Demo Video](#) · 🚀 [Live API](#) · 📱 [Download APK](#)
+**Live API:** https://nutriscanproject-1085535174080.europe-west1.run.app  
+**API Docs:** https://nutriscanproject-1085535174080.europe-west1.run.app/docs
 
 ---
 
 ## Features
 
-- **Ingredient Scanner** — Photograph any food label; Cloud Vision OCR extracts the text automatically
-- **AI Analysis** — Gemini 1.5 Pro rates every ingredient: `safe` / `caution` / `avoid`, with health impact and regulatory daily limits (FDA/EFSA/WHO)
-- **Health Score** — Overall 1–10 score with plain-language explanation, concerns, positives, and healthier alternatives
-- **Streaming AI Chat** — Ask follow-up questions about any scan result; answers stream in real time via Server-Sent Events
-- **Scan History** — All past scans saved to Firestore, accessible anytime
-- **Dietary Preferences** — Set vegan, halal, gluten-free, nut-free flags for personalised analysis
-- **Cross-Platform** — Flutter app runs on Android and iOS
-
----
-
-## Architecture
-
-```
-Flutter App (iOS / Android)
-        │
-        ▼  HTTPS + Firebase JWT
-Google Cloud Run — FastAPI
-        │
-        ├── Cloud Vision API      → OCR text extraction
-        ├── Ingredient Parser     → Isolates ingredient list from label noise
-        ├── Gemini 1.5 Pro        → Structured JSON analysis + streaming chat
-        └── Firestore             → Persists scan results per user
-```
-
-**CI/CD:** Cloud Build → Docker → Artifact Registry → Cloud Run
+- **Health Score** — 0–100 rating based on visible ingredient quality
+- **Ingredient Analysis** — every ingredient rated `good` / `bad` / `neutral` with a plain-language reason
+- **Claims Fact-Check** — detects misleading labels like "natural", "low fat", "healthy"
+- **Healthier Alternatives** — AI-suggested better products
+- **Cross-Platform** — Android, iOS, Web, Windows, macOS, Linux
 
 ---
 
@@ -46,12 +21,11 @@ Google Cloud Run — FastAPI
 
 | Layer | Technology |
 |---|---|
-| Mobile | Flutter 3.19+, Dart 3.3+, Riverpod, go_router, Dio |
-| Backend | Python 3.12, FastAPI, Uvicorn, Pydantic v2 |
-| AI / ML | Gemini 1.5 Pro, Google Cloud Vision API |
-| Database | Firebase Firestore, Firebase Storage |
-| Auth | Firebase Authentication (Google Sign-In) |
-| Infra | Google Cloud Run, Cloud Build, Secret Manager |
+| Frontend | Flutter 3, Dart 3 |
+| Backend | Python 3.11, FastAPI, Uvicorn |
+| AI | Google Gemini 2.5 Flash |
+| Hosting | Google Cloud Run (europe-west1) |
+| CI/CD | Google Cloud Build |
 
 ---
 
@@ -60,153 +34,85 @@ Google Cloud Run — FastAPI
 ```
 NutriScan/
 ├── backend/
-│   ├── app/
-│   │   ├── api/routes/        # scan, chat, history, health
-│   │   ├── services/          # gemini_service, vision_service, firestore_service, ingredient_parser
-│   │   ├── models/            # request_models, response_models
-│   │   ├── prompts/           # Gemini system + user prompt templates
-│   │   └── core/              # config, logging, firebase_client
-│   ├── tests/
-│   ├── main.py
+│   ├── main.py                   # FastAPI app + CORS
+│   ├── routes/analyze.py         # POST /analyze
+│   ├── services/ai.py            # Gemini image analysis
+│   ├── config/settings.py        # Env config
 │   ├── Dockerfile
+│   ├── cloudbuild.yaml
 │   └── requirements.txt
-├── frontend/nutriscan/
-│   └── lib/
-│       ├── features/          # auth, scanner, results, chat, history, profile
-│       ├── shared/            # models, widgets, utils
-│       └── core/              # config, theme, router, network
-└── firebase/
-    ├── firestore.rules
-    ├── firestore.indexes.json
-    └── storage.rules
+└── frontend/nutriscan/
+    └── lib/
+        ├── main.dart
+        ├── screens/
+        │   ├── home_screen.dart   # Image upload UI
+        │   └── result_screen.dart # Analysis results
+        ├── services/api_service.dart
+        └── widgets/image_card.dart
 ```
 
 ---
 
-## API Reference
+## API
 
-All endpoints require `Authorization: Bearer <firebase_id_token>` except `/health`.
+### `GET /`
+```json
+{ "status": "running" }
+```
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/v1/scan` | Analyse a food label image |
-| `GET` | `/api/v1/scan/{id}` | Fetch a previous scan result |
-| `POST` | `/api/v1/chat` | Streaming AI chat about a scan (SSE) |
-| `GET` | `/api/v1/history` | Paginated scan history |
-| `GET` | `/health` | Readiness probe |
+### `POST /analyze`
+
+**Request:** `multipart/form-data`, field name `file` (image)
+
+**Response:**
+```json
+{
+  "health_score": 62,
+  "summary": "Contains mostly natural grains but uses palm oil and artificial preservatives.",
+  "ingredients": [
+    { "name": "Whole Wheat", "status": "good", "reason": "High fibre, natural grain" },
+    { "name": "Palm Oil",    "status": "bad",  "reason": "High in saturated fat" }
+  ],
+  "claims_analysis": [
+    { "claim": "natural", "truth": "Contains artificial preservatives", "verdict": "misleading" }
+  ],
+  "alternatives": ["Brand X Multigrain", "Brand Y Oats"]
+}
+```
 
 ---
 
-## Getting Started
+## Local Setup
 
-### Prerequisites
-
-- Python 3.12+
-- Flutter 3.19+ / Dart 3.3+
-- Google Cloud project with billing enabled
-- Firebase project (same GCP project)
-- Gemini API key from [Google AI Studio](https://aistudio.google.com)
-
-### Backend — Local Setup
+### Backend
 
 ```bash
-# 1. Enable GCP APIs
-gcloud services enable vision.googleapis.com run.googleapis.com \
-  cloudbuild.googleapis.com artifactregistry.googleapis.com \
-  secretmanager.googleapis.com
-
-# 2. Configure environment
 cd backend
-cp .env.example .env
-# Fill in GEMINI_API_KEY, FIREBASE_PROJECT_ID, FIREBASE_CREDENTIALS_B64, STORAGE_BUCKET
-
-# 3. Install and run
 pip install -r requirements.txt
-uvicorn main:app --reload --port 8080
-
-# 4. Run tests
-pytest tests/ -v
 ```
 
-### Backend — Deploy to Cloud Run
-
-```bash
-# Store secrets
-gcloud secrets create gemini-api-key --data-file=<(echo -n "$GEMINI_API_KEY")
-gcloud secrets create firebase-credentials --data-file=<(echo -n "$FIREBASE_CREDS_B64")
-
-# Deploy
-gcloud builds submit --config cloudbuild.yaml
+Create `backend/.env`:
+```
+GOOGLE_API_KEY=your_google_api_key_here
 ```
 
-### Flutter App
+```bash
+uvicorn main:app --reload --port 8000
+```
+
+### Frontend
 
 ```bash
-# 1. Configure Firebase
-dart pub global activate flutterfire_cli
-flutterfire configure --project=your-project-id
-
-# 2. Set environment
 cd frontend/nutriscan
-cp .env.example .env
-# Set API_BASE_URL and STORAGE_BUCKET
-
-# 3. Generate code
 flutter pub get
-dart run build_runner build --delete-conflicting-outputs
-
-# 4. Run
 flutter run
 ```
 
-### Firebase Rules
-
-```bash
-cd firebase
-firebase use --add
-firebase deploy --only firestore:rules,firestore:indexes,storage
-```
-
 ---
 
-## Environment Variables
+## Deployment
 
-| Variable | Location | Description |
-|---|---|---|
-| `GEMINI_API_KEY` | Secret Manager | Google AI Studio key |
-| `FIREBASE_PROJECT_ID` | Cloud Run env | GCP project ID |
-| `FIREBASE_CREDENTIALS_B64` | Secret Manager | Base64-encoded service account JSON |
-| `STORAGE_BUCKET` | Cloud Run env | Firebase Storage bucket name |
-| `ALLOWED_ORIGINS` | Cloud Run env | CORS origins for Flutter web |
+The backend deploys automatically to Cloud Run on every push to `main` via Cloud Build (`backend/cloudbuild.yaml`).
 
----
-
-## How It Works
-
-1. User photographs a food label in the Flutter app
-2. Image uploads to Firebase Storage; URL sent to the backend
-3. Cloud Vision API performs OCR and returns raw label text
-4. `IngredientParser` strips noise and isolates the clean ingredient list
-5. Gemini 1.5 Pro analyses each ingredient against FDA/EFSA/WHO guidelines
-6. Structured `ScanResult` JSON saved to Firestore and returned to the app
-7. User sees health score, per-ingredient safety cards, concerns, and alternatives
-8. User can open a streaming chat to ask Gemini follow-up questions in context
-
----
-
-## Contributing
-
-1. Fork the repo
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Commit your changes: `git commit -m "Add your feature"`
-4. Push and open a pull request
-
----
-
-## License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
-Built with ❤️ using Google Gemini, Cloud Vision, Firebase, Flutter, and FastAPI.
+**Required:** Set `GOOGLE_API_KEY` as an environment variable in the Cloud Run service:  
+Cloud Run → Edit & Deploy New Revision → Variables & Secrets → Add Variable.

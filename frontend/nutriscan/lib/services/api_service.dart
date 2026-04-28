@@ -7,7 +7,7 @@ class ApiService {
   static Future<Map<String, dynamic>> sendToBackend(XFile imageFile) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('https://nutriscanproject-1085535174080.europe-west1.run.app/api/v1/scan'),
+      Uri.parse('https://nutriscanproject-1085535174080.europe-west1.run.app/analyze'),
     );
 
     if (kIsWeb) {
